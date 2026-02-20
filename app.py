@@ -83,8 +83,18 @@ st.markdown("""
     .metric-card h3 { margin: 0; color: #ff6b6b; font-size: 1.8rem; }
     .metric-card p  { margin: 0; color: #888; font-size: 0.85rem; }
     div[data-testid="stSidebar"] { background-color: #111827; }
-    /* tighter spacing between sections */
     .stSubheader { margin-top: 0.5rem !important; }
+    /* Welcome card */
+    .welcome-card {
+        background: linear-gradient(135deg, #16213e 0%, #1a1a2e 100%);
+        border: 1px solid #2a2a4a;
+        border-radius: 12px;
+        padding: 30px;
+        text-align: center;
+        margin: 16px 0;
+    }
+    .welcome-card h3 { color: #ff6b6b; margin-bottom: 8px; }
+    .welcome-card p { color: #999; font-size: 0.95rem; }
 </style>
 """, unsafe_allow_html=True)
 
@@ -264,23 +274,23 @@ with g4:
 ph_alert = st.empty()
 ph_suggestion = st.empty()
 
-# Two-column layout: video feed | stats
-col_vid, col_stats = st.columns([3, 1])
+# Compact layout: video (small) | quick stats + emotion dist
+col_vid, col_right = st.columns([1, 1])
 with col_vid:
     ph_video = st.empty()
-with col_stats:
-    ph_students = st.empty()
-    ph_dominant = st.empty()
-    ph_frames_done = st.empty()
-
-# Timeline + Emotion side by side
-col_tl, col_emo = st.columns([2, 1])
-with col_tl:
-    st.subheader("Engagement Timeline")
-    ph_timeline = st.empty()
-with col_emo:
-    st.subheader("Emotion Distribution")
+with col_right:
+    stat_c1, stat_c2, stat_c3 = st.columns(3)
+    with stat_c1:
+        ph_students = st.empty()
+    with stat_c2:
+        ph_dominant = st.empty()
+    with stat_c3:
+        ph_frames_done = st.empty()
     ph_emotions = st.empty()
+
+# Full-width engagement timeline
+st.subheader("Engagement Timeline")
+ph_timeline = st.empty()
 
 # Post-analysis frame slider
 ph_slider_header = st.empty()
@@ -368,20 +378,29 @@ def update_dashboard(results, latest_frame=None, processed=0, total=0):
         ph_timeline.plotly_chart(create_timeline_chart(results),
                                 use_container_width=True, key=_key("tl"))
 
-    # Emotion distribution
+    # Emotion distribution (compact — fits beside video)
     if all_emos_flat:
         total_emo = sum(all_emos_flat.values()) or 1
+        emo_labels = list(all_emos_flat.keys())
+        emo_vals = [round(v / total_emo * 100, 1) for v in all_emos_flat.values()]
+        emo_colors = ["#ff6b6b", "#e74c3c", "#3498db", "#9b59b6",
+                      "#f39c12", "#2ecc71", "#1abc9c"]
         emo_fig = go.Figure(go.Bar(
-            x=list(all_emos_flat.keys()),
-            y=[round(v / total_emo * 100, 1) for v in all_emos_flat.values()],
-            marker_color="#ff6b6b",
+            x=emo_labels,
+            y=emo_vals,
+            marker_color=emo_colors[:len(emo_labels)],
+            text=[f"{v}%" for v in emo_vals],
+            textposition="outside",
+            textfont=dict(size=11),
         ))
         emo_fig.update_layout(
             yaxis_title="%",
             paper_bgcolor="rgba(0,0,0,0)",
             plot_bgcolor="rgba(0,0,0,0)",
-            height=280,
-            margin=dict(l=40, r=20, t=20, b=40),
+            height=220,
+            margin=dict(l=30, r=10, t=10, b=30),
+            yaxis=dict(showgrid=False),
+            xaxis=dict(tickfont=dict(size=11)),
         )
         ph_emotions.plotly_chart(emo_fig, use_container_width=True, key=_key("emo"))
 
@@ -407,7 +426,14 @@ else:
     ph_s3.markdown('<p class="gauge-subtitle">Waiting...</p>', unsafe_allow_html=True)
     ph_g4.plotly_chart(create_donut_gauge(0, "#555"), use_container_width=True, key=_key("i4"))
     ph_s4.markdown('<p class="gauge-subtitle">Waiting...</p>', unsafe_allow_html=True)
-    ph_suggestion.info("Select a video source and click **Analyze Video** to start.")
+    ph_video.markdown(
+        '<div class="welcome-card">'
+        '<h3>Ready to Analyze</h3>'
+        '<p>Select a video source from the sidebar and click <strong>Analyze Video</strong> to begin.<br>'
+        'Live metrics will appear here as the video is processed.</p>'
+        '</div>',
+        unsafe_allow_html=True,
+    )
 
 
 # ──────────────────────────────────────────────
@@ -418,10 +444,10 @@ if st.sidebar.button("Analyze Video", type="primary"):
         st.error("Please select a video source first.")
     else:
         # Toast notification — visible from anywhere on the page
-        st.toast("Starting analysis...", icon="^")
+        st.toast("Starting analysis...", icon="🚀")
 
-        # Top-of-page status (visible without scrolling)
-        with ph_top_status.status("Analyzing video...", expanded=True) as top_status:
+        # Top-of-page status (collapsed by default — user opens if curious)
+        with ph_top_status.status("Analyzing video...", expanded=False) as top_status:
             top_status.write("Loading models (first run may download ~100 MB)...")
             facial, gaze, posture, fusion = load_analyzers()
             top_status.write("Models loaded. Processing frames...")
@@ -482,7 +508,7 @@ if st.sidebar.button("Analyze Video", type="primary"):
                 st.session_state["frames"] = annotated_frames
                 st.session_state["fps"] = fps
 
-                st.toast("Analysis complete!", icon="^")
+                st.toast("Analysis complete!", icon="✅")
 
 # ──────────────────────────────────────────────
 # Post-analysis: frame slider
@@ -491,5 +517,6 @@ if "results" in st.session_state and st.session_state.get("frames"):
     frames = st.session_state["frames"]
     ph_slider_header.subheader("Frame-by-Frame Playback")
     idx = ph_slider.slider("Browse frames", 0, len(frames) - 1, len(frames) - 1)
-    ph_slider_img.image(cv2.cvtColor(frames[idx], cv2.COLOR_BGR2RGB),
-                        use_container_width=True)
+    slider_col, _ = ph_slider_img.columns([1, 1])
+    slider_col.image(cv2.cvtColor(frames[idx], cv2.COLOR_BGR2RGB),
+                     use_container_width=True)
