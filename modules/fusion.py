@@ -18,7 +18,8 @@ class FusionEngine:
     def __init__(self):
         self.history = deque(maxlen=500)
 
-    def compute(self, facial_summary, gaze_results, posture_results):
+    def compute(self, facial_summary, gaze_results, posture_results,
+                alpha=None, beta=None, gamma=None):
         """
         Fuse the three modality scores into dashboard-ready metrics.
 
@@ -27,16 +28,28 @@ class FusionEngine:
         facial_summary : dict from FacialAnalyzer.get_class_summary()
         gaze_results   : dict from GazeAnalyzer.analyze_frame()
         posture_results: dict from PostureAnalyzer.analyze_frame()
+        alpha, beta, gamma : optional float overrides from UI sliders
 
         Returns
         -------
         dict with keys used directly by the Streamlit dashboard.
         """
+        a = alpha if alpha is not None else ALPHA
+        b = beta  if beta  is not None else BETA
+        g = gamma if gamma is not None else GAMMA
+
+        # Auto-normalize so weights always sum to 1.0
+        total = a + b + g
+        if total > 0:
+            a, b, g = a / total, b / total, g / total
+        else:
+            a, b, g = 1/3, 1/3, 1/3
+
         fi = facial_summary.get("avg_engagement", 0.5)
         pi = posture_results.get("engagement_score", 0.5)
         ai = gaze_results.get("attention_score", 0.5)
 
-        overall = ALPHA * fi + BETA * pi + GAMMA * ai
+        overall = a * fi + b * pi + g * ai
 
         result = {
             "overall_engagement": round(overall, 3),
