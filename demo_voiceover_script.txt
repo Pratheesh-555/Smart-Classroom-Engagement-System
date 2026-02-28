@@ -1,0 +1,116 @@
+EDULENS — LIVE DEMO VOICEOVER SCRIPT (~8 minutes)
+===================================================
+
+
+SECTION 1 — Opening the Dashboard (45s)
+----------------------------------------
+"Let me now walk you through a live demonstration of our EduLens system. This is the actual running application — not a mockup or a prototype."
+
+"When you first open EduLens, you are greeted with a Getting Started dialog that guides new users through the three simple steps — select a video source, configure your weights, and run the analysis. I will click Got It to proceed."
+
+"Notice the clean, dark-themed interface. We designed this to be professional and distraction-free, suitable for a real classroom or lecture hall environment. The status badge in the top-right currently shows Ready, indicating no analysis is running."
+
+
+SECTION 2 — Sidebar Controls (75s)
+-----------------------------------
+"On the left, we have the control panel — the sidebar. It stays open at all times for quick access."
+
+"At the top is our EduLens branding. Below that, we have the Video Source selector with three options — Upload Video lets you drag and drop any MP4, AVI, MOV, or MKV file. Default Video loads a pre-configured sample classroom video. And Webcam connects to your device camera for real-time analysis."
+
+"I will select Default Video for this demo. You can see the confirmation showing our sample video is loaded."
+
+"Next is the Processing section. The frame skip slider controls how many frames we skip between analyses. A value of three means we process every third frame — this balances speed and accuracy. For a quick demo, a higher value processes faster. For detailed analysis, set it to one."
+
+"Below that are the Fusion Weight sliders — Facial, Posture, and Gaze. These control how much each module contributes to the final engagement score. Notice the Normalized badge below — it shows the actual percentages after auto-normalisation. Even if I set all three to one, the system normalises them to thirty-three percent each. This ensures the weights always sum to one hundred percent, preventing any scoring errors."
+
+"And finally, the Run Analysis button — our primary call to action."
+
+
+SECTION 3 — Starting the Analysis (60s)
+----------------------------------------
+"Let me click Run Analysis now."
+
+"Two things happen immediately. First, a status bar appears at the top showing Analyzing Video with a loading spinner. Second — and this is a key design feature — notice the border of the entire page. It is now glowing blue with a breathing pulse animation. This dynamic glow border gives the instructor an instant visual cue that the system is actively processing."
+
+"In the sidebar, a progress bar appears showing which frame is being processed. The status expands to show model loading first, then frame-by-frame progress."
+
+"Behind the scenes, three AI modules are running on every sampled frame — YOLOv8 detects faces and classifies emotions through DeepFace, MediaPipe tracks iris positions for gaze direction, and YOLOv8-Pose analyses body posture. All three scores are fused into a single engagement metric."
+
+
+SECTION 4 — Real-Time KPI Gauges (60s)
+---------------------------------------
+"As frames are processed, look at the Engagement Overview section. Four donut gauges update in real-time."
+
+"The first gauge shows Overall Engagement — this is the fused score from all three modules. It is colour-coded: green means good engagement above sixty-five percent, amber means moderate between forty and sixty-five, and red means critical below forty percent. Below each gauge, a label indicates the status — Good, Moderate, or Critical."
+
+"The second gauge shows Confusion Rate — the percentage of students classified as confused based on their facial expressions."
+
+"The third gauge shows Looking Away Rate — how many students are not looking at the screen, based on iris tracking."
+
+"The fourth gauge shows Slouching Rate — the percentage of students in a slouched posture."
+
+"These four metrics together give the instructor a complete, at-a-glance overview of classroom health."
+
+
+SECTION 5 — Alert Bar & Intervention Suggestions (45s)
+------------------------------------------------------
+"Below the gauges, you can see the Intervention Suggestion bar. This is our Smart Intervention Engine in action."
+
+"It analyses the current metrics and provides contextual, actionable recommendations. For example, if confusion is high, it suggests re-explaining the concept with a worked example. If students are looking away, it recommends asking directed questions to re-engage the class. If slouching is widespread, it suggests an energiser activity."
+
+"If the overall engagement drops below our forty percent threshold, a red alert bar appears at the top warning the instructor that intervention is recommended. This alert disappears once engagement recovers."
+
+
+SECTION 6 — Live Video Feed & Metrics (60s)
+--------------------------------------------
+"The next section shows the Live Feed alongside Student Metrics."
+
+"On the left, we have the annotated video feed. Each detected face has a bounding box with the student's classified emotion label — happy, neutral, confused, sad, and so on. These annotations update with each processed frame."
+
+"On the right, three quick metrics are displayed — the number of Students detected in the current frame, the Dominant Emotion across all students so far, and the Frames Processed count."
+
+"Below these metrics is the Emotion Distribution bar chart. This aggregates all emotions detected across every frame and shows the percentage breakdown. The dominant emotion is highlighted in blue. This tells the instructor the overall emotional tone of the classroom — whether students are predominantly neutral, happy, confused, or showing other states."
+
+
+SECTION 7 — Engagement Timeline Chart (60s)
+--------------------------------------------
+"Scrolling down, we have the Engagement Timeline — this is one of the most powerful features."
+
+"It is an interactive Plotly chart with three lines. The solid blue line shows Overall Engagement over time. The dotted red line shows Confusion Rate. And the dotted amber line shows Looking Away Rate."
+
+"The dashed grey horizontal line marks our forty percent engagement threshold. Any time the blue engagement line drops below this threshold, the system flags a drop event."
+
+"You can hover over any point on the chart to see exact values at that timestamp. You can also zoom in on specific time ranges by clicking and dragging. This chart helps instructors identify exactly when in the lecture engagement dipped — was it during a specific topic? After a long stretch without interaction? This data is invaluable for improving future lectures."
+
+
+SECTION 8 — Frame-by-Frame Playback (45s)
+------------------------------------------
+"After the analysis completes, a Frame Playback section appears. This is essentially a video scrubber."
+
+"The slider lets you scrub through every processed frame. As you drag it, the annotated frame updates — you can see exactly which faces were detected, what emotions were classified, and how the bounding boxes were drawn at any point in the video."
+
+"This is particularly useful for reviewing specific moments — for instance, if the timeline showed a dip at the two-minute mark, you can scrub directly to that frame and visually inspect what was happening in the classroom."
+
+
+SECTION 9 — Post-Analysis Report (75s)
+---------------------------------------
+"Once analysis completes, notice that the border glow changes from blue to green — confirming successful completion. If engagement was critically low, it would glow red instead."
+
+"Below the playback section, the Analysis Report appears with three tabs."
+
+"The Summary tab shows four key metrics — Overall Engagement percentage, Total Students detected, Duration of the video, and the number of Drop Events where engagement fell below threshold. Below that, a Score Breakdown shows the individual contribution of each module — Facial Score, Posture Score, and Gaze Score. There is also a Recommendation section with the system's overall intervention suggestion."
+
+"At the bottom of the Summary tab is the Download CSV Report button. Clicking this downloads a detailed CSV file with per-frame data — timestamps, engagement scores, confusion rates, looking away rates, slouching rates, and student counts. Instructors can use this for record-keeping or further analysis in Excel."
+
+"The Details tab shows a scrollable data table with per-frame breakdown. Each row represents one analysed frame with all its metrics. You can scroll through and inspect any frame's exact values."
+
+"The Posture Heatmap tab visualises gesture patterns over time — showing which gestures were detected at which frames. The colour intensity indicates the frequency of each gesture."
+
+
+SECTION 10 — Closing (30s)
+--------------------------
+"That covers every feature of the EduLens dashboard — from real-time monitoring with four KPI gauges and live video feed, to interactive timeline analysis, frame-by-frame review, and a comprehensive downloadable report."
+
+"The system is designed to be non-intrusive, requiring no student interaction. It runs passively in the background, giving instructors the data they need to make informed teaching decisions in real-time."
+
+"Thank you. I am happy to take any questions."

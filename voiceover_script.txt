@@ -1,0 +1,42 @@
+EDULENS — VOICEOVER SCRIPT (15 minutes)
+========================================
+Based on: Smart-Classroom-Engagement-Detection-System.pdf (10 slides)
+Timing: ~10 min slides + ~5 min live demo
+
+  
+
+LIVE DEMO (~5 minutes)
+======================
+[Open http://localhost:8503 in browser]
+
+"Here is the EduLens dashboard running live. On the left sidebar you can see our video source selection, the analysis weights, and the frame skip control."
+
+[Click Run Analysis with Default Video]
+
+"I am now starting the analysis on a sample classroom video. Notice the blue glowing border — this indicates the system is actively processing."
+
+[Wait for a few frames to process]
+
+"As frames are processed, you can see the KPI gauges updating in real-time. The engagement score, confusion rate, looking away rate, and slouching rate are all computed per frame and averaged across all detected students."
+
+[Point to the timeline]
+
+"The engagement timeline chart shows how the classroom engagement evolves over time. The blue line is the overall engagement, and the dotted lines show confusion and attention drift. The dashed line is our forty percent threshold."
+
+[Point to emotion distribution]
+
+"On the right, we see the emotion distribution across all detected faces — showing the dominant emotions observed in the classroom."
+
+[Wait for analysis to complete]
+
+"The analysis is now complete — notice the border has turned green, confirming successful completion."
+
+[Scroll to the report section]
+
+"Below, we have the post-analysis report with three tabs. The Summary tab shows key metrics, score breakdowns, and recommendations. The Details tab has a per-frame data table. And the Posture Heatmap visualises gesture patterns over time."
+
+[Click CSV download]
+
+"Instructors can also download a complete CSV report for later review or integration with their LMS."
+
+"That concludes our demonstration. Thank you."
